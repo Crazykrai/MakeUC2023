@@ -3,13 +3,13 @@ import os
 import discord
 from dotenv import load_dotenv
 
+from cocimands import *
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client()
-
-@client.event
+@CociBot.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    print(f'{CociBot.user.name} has connected to Discord!')
 
-client.run(TOKEN)
+CociBot.run(TOKEN)
