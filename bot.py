@@ -4,6 +4,8 @@ import discord
 from dotenv import load_dotenv
 from discord.ext import commands
 
+from voiceInput import *
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -14,8 +16,10 @@ CociBot = commands.Bot(command_prefix="//", intents=intents)
 @CociBot.event
 async def on_ready():
     print(f'{CociBot.user.name} has connected to Discord!')
-    channel = discord.utils.get(CociBot.get_all_channels(), name="General") 
+    channel = discord.utils.get(CociBot.get_all_channels(), name="General")
+    textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     await channel.connect()
+    await startVoiceInput(textChannel)
 
 @CociBot.command()
 async def info(ctx):
@@ -30,5 +34,9 @@ async def join(ctx):
 async def leave(ctx):
     if (ctx.voice_client):
         await ctx.guild.voice_client.disconnect()
+
+@CociBot.command()
+async def listen(ctx):
+    await startVoiceInput(ctx)
 
 CociBot.run(TOKEN)
