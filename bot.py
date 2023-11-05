@@ -3,6 +3,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
+from search import gpt_summarize, query_google
 
 from voiceInput import *
 
@@ -38,5 +39,17 @@ async def leave(ctx):
 @CociBot.command()
 async def listen(ctx):
     await startVoiceInput(ctx)
+
+@CociBot.command()
+async def search(ctx, q):
+    textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
+    googleUrls = query_google(q)
+    print(googleUrls)
+    gptSummaries = [await gpt_summarize(x) for x in googleUrls]
+    print(gptSummaries)
+    for url, summary in zip(googleUrls, gptSummaries):
+        await ctx.send(url['link'] + ' - ' + summary.choices[0].message.content)
+
+
 
 CociBot.run(TOKEN)
