@@ -7,6 +7,12 @@ from search import gpt_summarize, query_google
 
 from voiceInput import *
 
+class ChannelContext:
+    def __init__(self, tc, vc):
+        self.tc = tc
+        self.vc = vc
+
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -20,7 +26,8 @@ async def on_ready():
     channel = discord.utils.get(CociBot.get_all_channels(), name="General")
     textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     await channel.connect()
-    #await startVoiceInput(textChannel)
+    ctx = ChannelContext(textChannel, channel)
+    await startVoiceInput(ctx)
 
 @CociBot.command()
 async def info(ctx):
