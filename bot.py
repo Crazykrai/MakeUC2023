@@ -12,13 +12,15 @@ class ChannelContext:
         self.tc = tc
         self.vc = vc
 
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+send_tts_messages = True
 
 intents = discord.Intents.all()
 intents.members = True
 CociBot = commands.Bot(command_prefix="//", intents=intents)
+
+pauser = False
 
 @CociBot.event
 async def on_ready():
@@ -27,7 +29,7 @@ async def on_ready():
     textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     await channel.connect()
     ctx = ChannelContext(textChannel, channel)
-    await startVoiceInput(ctx)
+    await listen(ctx)
 
 @CociBot.command()
 async def info(ctx):
@@ -48,6 +50,10 @@ async def listen(ctx):
     await startVoiceInput(ctx)
 
 @CociBot.command()
+async def pause(flag):
+    await pauseCheck(flag)
+
+@CociBot.command()
 async def search(ctx, q):
     textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     googleUrls = query_google(q)
@@ -66,6 +72,8 @@ async def send(ctx, *, message):
         memusernames.append(member)
     await ctx.send(str(memusernames[-1]) + " " + message)
 
-
+@CociBot.command()
+async def speak(ctx, message):
+    await ctx.send(message, tts=True)
 
 CociBot.run(TOKEN)

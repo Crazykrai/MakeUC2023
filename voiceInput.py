@@ -5,6 +5,8 @@ from search import gpt_summarize, query_google
 r = sr.Recognizer()
 OPENAI_API_KEY = "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"
 
+bazingaList = ['bazinga', 'Bazinga', 'Bazinga!', 'Bazinga.', 'bazinga.']
+pauseFlag = False
 
 async def searchGoogle(ctx, q):
     googleUrls = query_google(q)
@@ -23,15 +25,38 @@ async def send(ctx, message):
 
 voiceCommands = {"search": searchGoogle, "send": send}
 
+async def pauseCheck(flag):
+    global pauseFlag
+    if flag:
+        pauseFlag = True
+    else:
+        pauseFlag = False
+
+async def bazingaCheck(bazinga1, bazinga2, bazinga3, bazinga4, bazinga5, spokenList):
+    if pauseFlag == True:
+        return True
+    for bazinga in bazingaList:
+        if (bazinga == bazinga1 or
+            bazinga == bazinga2 or
+            bazinga == bazinga3 or
+            bazinga == bazinga4 or
+            bazinga == bazinga5) and (bazinga in spokenList):
+            return True
+    return False
 
 async def startVoiceInput(ctx):
     spokenWords = []
-
-    while 'bazinga' not in spokenWords and 'Bazinga' not in spokenWords and 'Bazinga.' not in spokenWords and 'bazinga.' not in spokenWords:
+    while not await bazingaCheck('bazinga', 
+                        'Bazinga', 
+                        'Bazinga!', 
+                        'Bazinga.', 
+                        'bazinga.', 
+                        spokenWords):
         spokenWords.clear()
-        await ctx.tc.send("[DEBUG] Damn... Not here")
+        await ctx.tc.send("[DEBUG] Speech recognition activated!")
         with sr.Microphone() as source:
             print("Say something!")
+            await ctx.tc.send("[DEBUG] Say something!")
             audio = r.listen(source)
         try:
             voiceInput: str = r.recognize_whisper_api(audio, api_key=OPENAI_API_KEY)
@@ -49,8 +74,5 @@ async def startVoiceInput(ctx):
         except sr.RequestError as e:
             print("Could not request results from Whisper API")
 
-# try:
-#     print(f"Whisper API thinks you said {r.recognize_whisper_api(audio, api_key=OPENAI_API_KEY)}")
-# except sr.RequestError as e:
-#     print("Could not request results from Whisper API")
+    await ctx.tc.send("[DEBUG] Exiting speech recognition!")    
 

@@ -34,4 +34,3 @@ def get_page_text(pageObject):
     if soupLen > 3500:
         text = text[:3500]
     return text
-
