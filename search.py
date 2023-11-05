@@ -1,5 +1,6 @@
 import os
 import openai
+import json
 
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
@@ -17,11 +18,13 @@ def google_search(search_term, api_key, cse_id, **kwargs):
     return res['items']
 
 def query_google(q):
-    return google_search(q, apiKey, seId, num=1)
+    return google_search(q, apiKey, seId, num=3)
 
 async def gpt_summarize(q):
     text = get_page_text(q)
-    result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Create a 2 sentence summary of a website's content using the given text from the website: " + text}])
+    print(text)
+    link = q['link']
+    result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Create a 2 sentence summary of a website's content using the given text from the website alongside the URL: " + link + " - " + text}])
     return result
 
 def get_page_text(pageObject):
@@ -31,6 +34,9 @@ def get_page_text(pageObject):
     soup = BeautifulSoup(html_page, 'html.parser')
     text = soup.getText()
     soupLen = len(text)
-    if soupLen > 3500:
-        text = text[:3500]
+    if soupLen > 3000:
+        text = text[:3000]
     return text
+
+
+#print(json.dumps(query_google("honda civic si"), indent=2))

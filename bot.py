@@ -29,7 +29,7 @@ async def on_ready():
     textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     await channel.connect()
     ctx = ChannelContext(textChannel, channel)
-    await listen(ctx)
+    #await listen(ctx)
 
 @CociBot.command()
 async def info(ctx):
@@ -54,9 +54,9 @@ async def pause(flag):
     await pauseCheck(flag)
 
 @CociBot.command()
-async def search(ctx, q):
-    textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
+async def search(ctx, *, q):
     googleUrls = query_google(q)
+    await ctx.send(q)
     print(googleUrls)
     gptSummaries = [await gpt_summarize(x) for x in googleUrls]
     print(gptSummaries)

@@ -32,26 +32,17 @@ async def pauseCheck(flag):
     else:
         pauseFlag = False
 
-async def bazingaCheck(bazinga1, bazinga2, bazinga3, bazinga4, bazinga5, spokenList):
+async def bazingaCheck(spokenList):
     if pauseFlag == True:
         return True
     for bazinga in bazingaList:
-        if (bazinga == bazinga1 or
-            bazinga == bazinga2 or
-            bazinga == bazinga3 or
-            bazinga == bazinga4 or
-            bazinga == bazinga5) and (bazinga in spokenList):
+        if (bazinga in spokenList):
             return True
     return False
 
 async def startVoiceInput(ctx):
     spokenWords = []
-    while not await bazingaCheck('bazinga', 
-                        'Bazinga', 
-                        'Bazinga!', 
-                        'Bazinga.', 
-                        'bazinga.', 
-                        spokenWords):
+    while not await bazingaCheck(spokenWords):
         spokenWords.clear()
         await ctx.tc.send("[DEBUG] Speech recognition activated!")
         with sr.Microphone() as source:
