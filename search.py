@@ -1,6 +1,7 @@
 import os
 import openai
 import json
+import re
 
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
@@ -21,7 +22,7 @@ def query_google(q):
     return google_search(q, apiKey, seId, num=3)
 
 async def gpt_summarize(q):
-    text = get_page_text(q)
+    text = re.sub(r'\s+', ' ', get_page_text(q))
     print(text)
     link = q['link']
     result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Create a 2 sentence summary of a website's content using the given text from the website alongside the URL: " + link + " - " + text}])
