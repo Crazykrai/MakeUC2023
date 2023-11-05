@@ -20,7 +20,7 @@ async def on_ready():
     channel = discord.utils.get(CociBot.get_all_channels(), name="General")
     textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     await channel.connect()
-    await startVoiceInput(textChannel)
+    #await startVoiceInput(textChannel)
 
 @CociBot.command()
 async def info(ctx):
@@ -49,6 +49,15 @@ async def search(ctx, q):
     print(gptSummaries)
     for url, summary in zip(googleUrls, gptSummaries):
         await ctx.send(url['link'] + ' - ' + summary.choices[0].message.content)
+
+@CociBot.command()
+async def send(ctx, *, message):
+    channel = discord.utils.get(CociBot.get_all_channels(), name="General")
+    members = channel.members
+    memusernames = []
+    for member in members:
+        memusernames.append(member)
+    await ctx.send(str(memusernames[-1]) + " " + message)
 
 
 
