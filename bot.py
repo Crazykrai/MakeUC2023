@@ -29,7 +29,7 @@ async def on_ready():
     textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
     await channel.connect()
     ctx = ChannelContext(textChannel, channel)
-    #await listen(ctx)
+    await listen(ctx)
 
 @CociBot.command()
 async def info(ctx):
@@ -47,6 +47,9 @@ async def leave(ctx):
 
 @CociBot.command()
 async def listen(ctx):
+    channel = discord.utils.get(CociBot.get_all_channels(), name="General")
+    textChannel =  discord.utils.get(CociBot.get_all_channels(), name="general")
+    ctx = ChannelContext(textChannel, channel)
     await startVoiceInput(ctx)
 
 @CociBot.command()

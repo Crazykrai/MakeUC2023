@@ -1,9 +1,12 @@
 import speech_recognition as sr
+import os
 
 from search import gpt_summarize, query_google
+from dotenv import load_dotenv
 
 r = sr.Recognizer()
-OPENAI_API_KEY = "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"
+load_dotenv()
+OPENAI_API_KEY = os.getenv('OPENAPI_API_KEY')
 
 bazingaList = ['bazinga', 'Bazinga', 'Bazinga!', 'Bazinga.', 'bazinga.']
 pauseFlag = False
