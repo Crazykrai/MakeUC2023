@@ -21,7 +21,7 @@ def query_google(q):
 
 async def gpt_summarize(q):
     text = get_page_text(q)
-    result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Create a brief summary of a website's content using the given text from the website: " + text}])
+    result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Create a 2 sentence summary of a website's content using the given text from the website: " + text}])
     return result
 
 def get_page_text(pageObject):
@@ -29,5 +29,9 @@ def get_page_text(pageObject):
     html_page = urlopen(req).read()
 
     soup = BeautifulSoup(html_page, 'html.parser')
-    return soup.getText()
+    text = soup.getText()
+    soupLen = len(text)
+    if soupLen > 3500:
+        text = text[:3500]
+    return text
 
